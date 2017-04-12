@@ -1,0 +1,58 @@
+CREATE OR REPLACE PACKAGE consultaTrabajadores
+IS
+TYPE tcursor IS REF CURSOR;
+
+CREATE OR REPLACE PROCEDURE consultarTrabajadorDni(t_trabajadores   OUT tcursor);
+CREATE OR REPLACE PROCEDURE consultarTrabajadorNom(p_nombre VARCHAR2, OUT tcursor);
+CREATE OR REPLACE PROCEDURE consultarDniPorNombre(p_dni IN NUMBER, t_trabajadores VARCHAR2, OUT tcursor);
+
+END consultaTrabajadores;
+
+CREATE OR REPLACE PACKAGE BODY consultaTrabajadores
+
+
+PROCEDURE consultarTrabajadorDni(t_trabajadores   OUT tcursor)
+(
+t_cursor OUT tcursor
+)
+IS
+BEGIN
+OPEN t_cursor FOR
+	SELECT DNI, NOMBRE, APELLIDOS, CALLE, PORTAL, PISO, TELPER, TELEMP, SALARIO, FECHANAC, CATEGORIA 
+	FROM TRABAJADORES
+	WHERE DNI=PDNI;
+EXCEPTION
+WHEN DATA_NOT_FOUND THEN
+RAISE_APPLICATION_ERROR(-20012, "No hay trabajadores que se correspondan a lo introducido");
+END consultarTrabajadorDni;
+
+PROCEDURE consultarTrabajadorNom(p_nombre VARCHAR2, OUT tcursor)
+(
+t_cursor OUT tcursor
+)
+IS
+BEGIN
+OPEN t_cursor FOR
+	SELECT DNI, NOMBRE, APELLIDOS, CALLE, PORTAL, PISO, TELPER, TELEMP, SALARIO, FECHANAC, CATEGORIA 
+	FROM TRABAJADORES
+	WHERE DNI=PDNI;
+EXCEPTION
+WHEN DATA_NOT_FOUND THEN
+RAISE_APPLICATION_ERROR(-20012, "No hay trabajadores que se correspondan a lo introducido");
+END consultarTrabajadorNom;
+
+PROCEDURE consultarDniPorNom(p_dni IN NUMBER, t_trabajadores VARCHAR2, OUT tcursor)
+(
+t_cursor OUT tcursor
+)
+IS
+BEGIN
+OPEN t_cursor FOR
+	SELECT DNI 
+	FROM TRABAJADORES
+EXCEPTION
+WHEN DATA_NOT_FOUND THEN
+RAISE_APPLICATION_ERROR(-20012, "No existe un trabajador con ese nombre");
+END consultarDniPorNom;
+
+END consultaTrabajadores;

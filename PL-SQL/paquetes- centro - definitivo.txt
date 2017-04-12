@@ -1,0 +1,58 @@
+CREATE OR REPLACE PACKAGE consultaCentros
+IS
+TYPE tcursor IS REF CURSOR;
+
+CREATE OR REPLACE PROCEDURE consultarCentroNum(p_id IN NUMBER, c_centros OUT tcursor);
+CREATE OR REPLACE PROCEDURE consultarCentroNom(p_nombre VARCHAR2, c_centros OUT tcursor);
+CREATE OR REPLACE PROCEDURE consultarNumPorNom(p_id IN NUMBER, p_nombre VARCHAR2, c_centros OUT tcursor);
+
+END consultaCentros;
+
+CREATE OR REPLACE PACKAGE BODY consultaCentros
+
+
+PROCEDURE consultarCentroNum(p_id IN NUMBER, c_centros OUT tcursor)
+(
+t_cursor OUT tcursor
+)
+IS
+BEGIN
+OPEN t_cursor FOR
+	SELECT CENTRO_NO, NOMBRE, PROVINCIA, CIUDAD, CP, CALLE, TELEFONO 
+	FROM CENTROS
+	WHERE CENTRO_NO=PCENTRO_NO;
+EXCEPTION
+WHEN DATA_NOT_FOUND THEN
+RAISE_APPLICATION_ERROR(-20012, "No hay centros que se correspondan a lo introducido");
+END consultarCentroNum;
+
+PROCEDURE consultarCentroNom(p_nombre VARCHAR2, c_centros OUT tcursor)
+(
+t_cursor OUT tcursor
+)
+IS
+BEGIN
+OPEN t_cursor FOR
+	SELECT CENTRO_NO, NOMBRE, PROVINCIA, CIUDAD, CP, CALLE, TELEFONO 
+	FROM CENTROS
+	WHERE CENTRO_NO=PCENTRO_NO;
+EXCEPTION
+WHEN DATA_NOT_FOUND THEN
+RAISE_APPLICATION_ERROR(-20012, "No hay centros que se correspondan a lo introducido");
+END consultarCentroNom;
+
+PROCEDURE consultarNumPorNom(p_id IN NUMBER, p_nombre VARCHAR2, c_centros OUT tcursor)
+(
+t_cursor OUT tcursor
+)
+IS
+BEGIN
+OPEN t_cursor FOR
+	SELECT NOMBRE 
+	FROM CENTROS
+EXCEPTION
+WHEN DATA_NOT_FOUND THEN
+RAISE_APPLICATION_ERROR(-20012, "No existe un centro con ese nombre");
+END consultarNumPorNom;
+
+END consultaCentros;
